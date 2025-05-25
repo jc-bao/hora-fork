@@ -5,7 +5,7 @@
 <!-- =================================================================================== -->
 <robot name="allegro_hand_right" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <mujoco>
-    <compiler meshdir=".." balanceinertia="true" discardvisual="false"/>
+    <compiler meshdir="./meshes/allegro" balanceinertia="true" discardvisual="false"/>
   </mujoco>
   <!-- ======================== BASE PARAMS ========================= -->
   <!-- ======================== FINGER PARAMS ======================== -->
@@ -22,13 +22,13 @@ and one fixed link will be added for the tip. -->
   <link name="base_link">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/base_link.obj"/>
+        <mesh filename="base_link.obj"/>
       </geometry>
       <!-- LEFT -->
       <!-- <origin rpy="${-90*DEG2RAD} 0 0" xyz="0 0 0 "/> -->
       <!-- RIGHT -->
       <origin rpy="0 0 0" xyz="0 0 0 "/>
-      <material name="black">
+      <material name="black">allegro/meshes/allegro/
         <color rgba="0.2 0.2 0.2 1"/>
       </material>
     </visual>
@@ -55,7 +55,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_0.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_0.0.obj"/>
+        <mesh filename="link_0.0.obj"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -83,7 +83,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_1.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_1.0.obj"/>
+        <mesh filename="link_1.0.obj"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -111,7 +111,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_2.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_2.0.obj"/>
+        <mesh filename="link_2.0.obj"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -139,7 +139,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_3.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_3.0.obj"/>
+        <mesh filename="link_3.0.obj"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -203,7 +203,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_4.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_0.0.obj"/>
+        <mesh filename="link_0.0.obj"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -231,7 +231,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_5.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_1.0.obj"/>
+        <mesh filename="link_1.0.obj"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -259,7 +259,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_6.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_2.0.obj"/>
+        <mesh filename="link_2.0.obj"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -287,7 +287,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_7.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_3.0.obj"/>
+        <mesh filename="link_3.0.obj"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -350,7 +350,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_8.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_0.0.obj"/>
+        <mesh filename="link_0.0.obj"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -378,7 +378,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_9.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_1.0.obj"/>
+        <mesh filename="link_1.0.obj"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -406,7 +406,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_10.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_2.0.obj"/>
+        <mesh filename="link_2.0.obj"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -434,7 +434,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_11.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_3.0.obj"/>
+        <mesh filename="link_3.0.obj"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -499,7 +499,7 @@ and one fixed link will be added for the tip. -->
     <visual>
       <geometry>
         <!-- RIGHT -->
-        <mesh filename="allegro/meshes/allegro/link_12.0_right.obj"/>
+        <mesh filename="link_12.0_right.obj"/>
         <!-- LEFT -->
         <!-- <mesh filename="package://allegro_hand_description/meshes/link_12.0_left.STL" /> -->
       </geometry>
@@ -535,7 +535,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_13.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_13.0.obj"/>
+        <mesh filename="link_13.0.obj"/>
       </geometry>
       <material name="black">
         <color rgba=".2 .2 .2 1"/>
@@ -568,7 +568,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_14.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_14.0.obj"/>
+        <mesh filename="link_14.0.obj"/>
       </geometry>
       <material name="black">
       </material>
@@ -596,7 +596,7 @@ and one fixed link will be added for the tip. -->
   <link name="link_15.0">
     <visual>
       <geometry>
-        <mesh filename="allegro/meshes/allegro/link_15.0.obj"/>
+        <mesh filename="link_15.0.obj"/>
       </geometry>
       <material name="black">
     	</material>

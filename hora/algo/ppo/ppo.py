@@ -22,6 +22,11 @@ from hora.utils.misc import AverageScalarMeter
 
 from tensorboardX import SummaryWriter
 
+# Chaoyi
+import numpy as np
+import mujoco
+import mujoco.viewer
+
 
 class PPO(object):
     def __init__(self, env, output_dif, full_config):
@@ -118,6 +123,7 @@ class PPO(object):
         self.data_collect_time = 0
         self.rl_train_time = 0
         self.all_time = 0
+
 
     def write_stats(self, a_losses, c_losses, b_losses, entropies, kls):
         self.writer.add_scalar('performance/RLTrainFPS', self.agent_steps / self.rl_train_time, self.agent_steps)
@@ -224,9 +230,27 @@ class PPO(object):
             self.running_mean_std.load_state_dict(checkpoint['running_mean_std'])
 
     def test(self):
+        # Chaoyi: add mujoco env
+        # Chaoyi: add mujoco env
+        # mj_model = mujoco.MjModel.from_xml_path('assets/allegro/scene_right.xml')
+        # mj_model.opt.timestep = self.env.dt
+        # mj_data = mujoco.MjData(mj_model)
+
         self.set_eval()
         obs_dict = self.env.reset()
+
+        # set qpos to env qpos
+        # hand_qpos = self.env.allegro_hand_dof_pos[0].cpu().numpy()
+        # object_qpos = self.env.object_pos[0].cpu().numpy()
+        # mj_data.qpos[:-7] = hand_qpos
+        # mj_data.qpos[-7:-4] = object_qpos
+        # load key frame
+        # mujoco.mj_resetDataKeyframe(mj_model, mj_data, 0)
+        # mujoco.mj_step(mj_model, mj_data)
+
         while True:
+        # with mujoco.viewer.launch_passive(mj_model, mj_data) as viewer:
+        #     while viewer.is_running():
             input_dict = {
                 'obs': self.running_mean_std(obs_dict['obs']),
                 'priv_info': obs_dict['priv_info'],
@@ -234,6 +258,24 @@ class PPO(object):
             mu = self.model.act_inference(input_dict)
             mu = torch.clamp(mu, -1.0, 1.0)
             obs_dict, r, done, info = self.env.step(mu)
+
+                # mujoco step
+                # ctrl = self.env.cur_targets[0].cpu().numpy()
+                # hand_qpos = self.env.allegro_hand_dof_pos[0].cpu().numpy()
+                # object_qpos = self.env.object_pose[0].cpu().numpy()
+                # pos = object_qpos[:3]
+                # pos[2] -= 0.5
+                # object_qpos[:3] = pos
+                # xyzw = object_qpos[3:]
+                # wxyz = np.array([xyzw[3], xyzw[0], xyzw[1], xyzw[2]])
+                # object_qpos[3:] = wxyz
+
+                # for i in range(self.env.control_freq_inv):
+                #     mj_data.ctrl = ctrl
+                #     # mj_data.qpos[:-7] = hand_qpos
+                #     mj_data.qpos[-7:] = object_qpos
+                #     mujoco.mj_step(mj_model, mj_data)
+                # viewer.sync()
 
     def train_epoch(self):
         # collect minibatch data
