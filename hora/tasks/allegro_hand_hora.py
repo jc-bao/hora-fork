@@ -117,7 +117,7 @@ class AllegroHandHora(VecTask):
         self.stat_sum_obj_linvel = 0
         self.stat_sum_torques = 0
         self.env_evaluated = 0
-        self.max_evaluate_envs = 500000
+        self.max_evaluate_envs = 1024 # Chaoyi: modify from 500000
 
     def _create_envs(self, num_envs, spacing, num_per_row):
         self._create_ground_plane()
@@ -367,8 +367,8 @@ class AllegroHandHora(VecTask):
                    f'lin vel (x100): {self.stat_sum_obj_linvel * 100 / self.stat_sum_episode_length:.4f} | ' \
                    f'command torque: {self.stat_sum_torques / self.stat_sum_episode_length:.2f}'
             tprint(info)
-            if self.env_evaluated >= self.max_evaluate_envs:
-                exit()
+            # if self.env_evaluated >= self.max_evaluate_envs:
+            #     exit()
 
     def post_physics_step(self):
         self.progress_buf += 1

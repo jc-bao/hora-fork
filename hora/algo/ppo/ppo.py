@@ -230,6 +230,7 @@ class PPO(object):
             self.running_mean_std.load_state_dict(checkpoint['running_mean_std'])
 
     def test(self):
+        enable_log = True
         # Chaoyi: add mujoco env
         # Chaoyi: add mujoco env
         # mj_model = mujoco.MjModel.from_xml_path('assets/allegro/scene_right.xml')
@@ -247,6 +248,9 @@ class PPO(object):
         # load key frame
         # mujoco.mj_resetDataKeyframe(mj_model, mj_data, 0)
         # mujoco.mj_step(mj_model, mj_data)
+        
+        if enable_log:
+            info_list = []
 
         while True:
         # with mujoco.viewer.launch_passive(mj_model, mj_data) as viewer:
@@ -257,8 +261,35 @@ class PPO(object):
             }
             mu = self.model.act_inference(input_dict)
             mu = torch.clamp(mu, -1.0, 1.0)
+
+            # log state
+            object_qpos = self.env.object_pose.cpu().numpy()
+            xyzw = object_qpos[:, 3:]
+            wxyz = np.stack([xyzw[:, 3], xyzw[:, 0], xyzw[:, 1], xyzw[:, 2]], axis=-1)
+            object_qpos[:, 3:] = wxyz
+            object_qvel = np.zeros((object_qpos.shape[0], 6))
+            object_qvel[:, :3] = self.env.object_linvel.cpu().numpy()
+            object_qvel[:, 3:] = self.env.object_angvel.cpu().numpy()
+            hand_qpos = self.env.allegro_hand_dof_pos.cpu().numpy()
+            hand_qvel = self.env.allegro_hand_dof_vel.cpu().numpy()
+            qpos = np.concatenate([hand_qpos, object_qpos], axis=-1) # (batch_size, 23)
+            qvel = np.concatenate([hand_qvel, object_qvel], axis=-1) # (batch_size, 22)
+
+            # step
             obs_dict, r, done, info = self.env.step(mu)
 
+            # log ctrl
+            ctrl = self.env.cur_targets.cpu().numpy() # (batch_size, 22)
+
+            log_info = {
+                "qpos": qpos,
+                "qvel": qvel,
+                "ctrl": ctrl,
+                "r": r.cpu().numpy(),
+                "done": done.cpu().numpy(),
+            }
+            info_list.append(log_info)
+            
                 # mujoco step
                 # ctrl = self.env.cur_targets[0].cpu().numpy()
                 # hand_qpos = self.env.allegro_hand_dof_pos[0].cpu().numpy()
@@ -276,6 +307,17 @@ class PPO(object):
                 #     mj_data.qpos[-7:] = object_qpos
                 #     mujoco.mj_step(mj_model, mj_data)
                 # viewer.sync()
+            
+            if self.env.evaluate:
+                if self.env.env_evaluated >= self.env.max_evaluate_envs:
+                    # save info
+                    info_aggregate = {}
+                    for k, v in info_list[0].items():
+                        info_aggregate[k] = np.stack([info[k] for info in info_list], axis=0)
+                        print(f"{k}: {info_aggregate[k].shape}")
+                    np.savez(os.path.join(self.output_dir, 'info_aggregate.npz'), **info_aggregate)
+                    print(f'save info to {os.path.join(self.output_dir, "info_aggregate.npz")}')
+                    break
 
     def train_epoch(self):
         # collect minibatch data

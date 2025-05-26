@@ -4,7 +4,8 @@ CACHE=$2
 C=outputs/AllegroHandHora/"${CACHE}"/stage1_nn/best.pth
 CUDA_VISIBLE_DEVICES=${GPUS} \
 python train.py task=AllegroHandHora headless=True \
-task.env.numEnvs=20000 test=True task.on_evaluation=True \
+task.env.numEnvs=1024 \
+test=True task.on_evaluation=True \
 task.env.object.type=cylinder_default \
 train.algo=PPO \
 task.env.randomization.randomizeMass=True \
