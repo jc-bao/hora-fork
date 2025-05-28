@@ -524,7 +524,7 @@ class AllegroHandHora(VecTask):
         for p_id, prim in enumerate(primitive_list):
             if 'cuboid' in prim:
                 subset_name = self.object_type.split('_')[-1]
-                cuboids = sorted(glob(f'../assets/cuboid/{subset_name}/*.urdf'))
+                cuboids = sorted(glob(f'assets/cuboid/{subset_name}/*.urdf'))
                 cuboid_list = [f'cuboid_{i}' for i in range(len(cuboids))]
                 self.object_type_list += cuboid_list
                 for i, name in enumerate(cuboids):

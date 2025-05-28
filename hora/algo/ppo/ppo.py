@@ -232,92 +232,97 @@ class PPO(object):
     def test(self):
         enable_log = True
         # Chaoyi: add mujoco env
-        # Chaoyi: add mujoco env
-        # mj_model = mujoco.MjModel.from_xml_path('assets/allegro/scene_right.xml')
-        # mj_model.opt.timestep = self.env.dt
-        # mj_data = mujoco.MjData(mj_model)
+        mj_model = mujoco.MjModel.from_xml_path('assets/allegro/scene_right.xml')
+        mj_model.opt.timestep = self.env.dt
+        mj_data = mujoco.MjData(mj_model)
 
         self.set_eval()
         obs_dict = self.env.reset()
 
         # set qpos to env qpos
-        # hand_qpos = self.env.allegro_hand_dof_pos[0].cpu().numpy()
-        # object_qpos = self.env.object_pos[0].cpu().numpy()
-        # mj_data.qpos[:-7] = hand_qpos
-        # mj_data.qpos[-7:-4] = object_qpos
+        hand_qpos = self.env.allegro_hand_dof_pos[0].cpu().numpy()
+        object_qpos = self.env.object_pos[0].cpu().numpy()
+        mj_data.qpos[:-7] = hand_qpos
+        mj_data.qpos[-7:-4] = object_qpos
         # load key frame
-        # mujoco.mj_resetDataKeyframe(mj_model, mj_data, 0)
-        # mujoco.mj_step(mj_model, mj_data)
+        mujoco.mj_resetDataKeyframe(mj_model, mj_data, 0)
+        mujoco.mj_step(mj_model, mj_data)
         
         if enable_log:
             info_list = []
 
-        while True:
-        # with mujoco.viewer.launch_passive(mj_model, mj_data) as viewer:
-        #     while viewer.is_running():
-            input_dict = {
-                'obs': self.running_mean_std(obs_dict['obs']),
-                'priv_info': obs_dict['priv_info'],
-            }
-            mu = self.model.act_inference(input_dict)
-            mu = torch.clamp(mu, -1.0, 1.0)
+        # while True:
+        step_cnt = 0
+        with mujoco.viewer.launch_passive(mj_model, mj_data) as viewer:
+            while viewer.is_running():
+                input_dict = {
+                    'obs': self.running_mean_std(obs_dict['obs']),
+                    'priv_info': obs_dict['priv_info'],
+                }
+                mu = self.model.act_inference(input_dict)
+                mu = torch.clamp(mu, -1.0, 1.0)
 
-            # log state
-            object_qpos = self.env.object_pose.cpu().numpy()
-            xyzw = object_qpos[:, 3:]
-            wxyz = np.stack([xyzw[:, 3], xyzw[:, 0], xyzw[:, 1], xyzw[:, 2]], axis=-1)
-            object_qpos[:, 3:] = wxyz
-            object_qvel = np.zeros((object_qpos.shape[0], 6))
-            object_qvel[:, :3] = self.env.object_linvel.cpu().numpy()
-            object_qvel[:, 3:] = self.env.object_angvel.cpu().numpy()
-            hand_qpos = self.env.allegro_hand_dof_pos.cpu().numpy()
-            hand_qvel = self.env.allegro_hand_dof_vel.cpu().numpy()
-            qpos = np.concatenate([hand_qpos, object_qpos], axis=-1) # (batch_size, 23)
-            qvel = np.concatenate([hand_qvel, object_qvel], axis=-1) # (batch_size, 22)
+                # log state
+                object_qpos = self.env.object_pose.cpu().numpy()
+                pos = object_qpos[:, :3]
+                pos[:, 2] -= 0.5
+                object_qpos[:, :3] = pos
+                xyzw = object_qpos[:, 3:]
+                wxyz = np.stack([xyzw[:, 3], xyzw[:, 0], xyzw[:, 1], xyzw[:, 2]], axis=-1)
+                object_qpos[:, 3:] = wxyz
+                object_qvel = np.zeros((object_qpos.shape[0], 6))
+                object_qvel[:, :3] = self.env.object_linvel.cpu().numpy()
+                object_qvel[:, 3:] = self.env.object_angvel.cpu().numpy()
+                hand_qpos = self.env.allegro_hand_dof_pos.cpu().numpy()
+                hand_qvel = self.env.allegro_hand_dof_vel.cpu().numpy()
+                qpos = np.concatenate([hand_qpos, object_qpos], axis=-1) # (batch_size, 23)
+                qvel = np.concatenate([hand_qvel, object_qvel], axis=-1) # (batch_size, 22)
 
-            # step
-            obs_dict, r, done, info = self.env.step(mu)
+                # step
+                obs_dict, r, done, info = self.env.step(mu)
 
-            # log ctrl
-            ctrl = self.env.cur_targets.cpu().numpy() # (batch_size, 22)
+                # log ctrl
+                ctrl = self.env.cur_targets.cpu().numpy() # (batch_size, 22)
 
-            log_info = {
-                "qpos": qpos,
-                "qvel": qvel,
-                "ctrl": ctrl,
-                "r": r.cpu().numpy(),
-                "done": done.cpu().numpy(),
-            }
-            info_list.append(log_info)
-            
+                log_info = {
+                    "qpos": qpos,
+                    "qvel": qvel,
+                    "ctrl": ctrl,
+                    "r": r.cpu().numpy(),
+                    "done": done.cpu().numpy(),
+                }
+                info_list.append(log_info)
+                
                 # mujoco step
-                # ctrl = self.env.cur_targets[0].cpu().numpy()
-                # hand_qpos = self.env.allegro_hand_dof_pos[0].cpu().numpy()
-                # object_qpos = self.env.object_pose[0].cpu().numpy()
-                # pos = object_qpos[:3]
-                # pos[2] -= 0.5
-                # object_qpos[:3] = pos
-                # xyzw = object_qpos[3:]
-                # wxyz = np.array([xyzw[3], xyzw[0], xyzw[1], xyzw[2]])
-                # object_qpos[3:] = wxyz
-
-                # for i in range(self.env.control_freq_inv):
-                #     mj_data.ctrl = ctrl
-                #     # mj_data.qpos[:-7] = hand_qpos
-                #     mj_data.qpos[-7:] = object_qpos
-                #     mujoco.mj_step(mj_model, mj_data)
-                # viewer.sync()
-            
-            if self.env.evaluate:
-                if self.env.env_evaluated >= self.env.max_evaluate_envs:
-                    # save info
-                    info_aggregate = {}
-                    for k, v in info_list[0].items():
-                        info_aggregate[k] = np.stack([info[k] for info in info_list], axis=0)
-                        print(f"{k}: {info_aggregate[k].shape}")
-                    np.savez(os.path.join(self.output_dir, 'info_aggregate.npz'), **info_aggregate)
-                    print(f'save info to {os.path.join(self.output_dir, "info_aggregate.npz")}')
-                    break
+                ctrl = self.env.cur_targets[0].cpu().numpy()
+                # ctrl = hand_qpos
+                
+                for i in range(self.env.control_freq_inv):
+                    mj_data.ctrl = ctrl
+                    # mj_data.qpos[:-7] = hand_qpos
+                    # mj_data.qvel[:-6] = hand_qvel
+                    # mj_data.qpos[-7:] = object_qpos
+                    # mj_data.qvel[-6:] = object_qvel
+                    # if step_cnt % 10 == 0:
+                    # mj_data.qpos[:-7] = hand_qpos
+                    # mj_data.qvel[:-6] = hand_qvel
+                    # mj_data.qpos[-7:] = object_qpos
+                    # mj_data.qvel[-6:] = object_qvel
+                    mujoco.mj_step(mj_model, mj_data)
+                viewer.sync()
+                
+                if self.env.evaluate:
+                    if self.env.env_evaluated >= self.env.max_evaluate_envs:
+                        # # save info
+                        # info_aggregate = {}
+                        # for k, v in info_list[0].items():
+                        #     info_aggregate[k] = np.stack([info[k] for info in info_list], axis=0)
+                        #     print(f"{k}: {info_aggregate[k].shape}")
+                        # np.savez(os.path.join(self.output_dir, 'info_aggregate.npz'), **info_aggregate)
+                        # print(f'save info to {os.path.join(self.output_dir, "info_aggregate.npz")}')
+                        break
+                
+                step_cnt += 1
 
     def train_epoch(self):
         # collect minibatch data

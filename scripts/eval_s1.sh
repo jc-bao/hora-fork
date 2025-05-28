@@ -6,7 +6,7 @@ CUDA_VISIBLE_DEVICES=${GPUS} \
 python train.py task=AllegroHandHora headless=True \
 task.env.numEnvs=1024 \
 test=True task.on_evaluation=True \
-task.env.object.type=cylinder_default \
+task.env.object.type=cuboid_default \
 train.algo=PPO \
 task.env.randomization.randomizeMass=True \
 task.env.randomization.randomizeCOM=True \
@@ -19,3 +19,4 @@ task.env.forceScale=2 task.env.randomForceProbScalar=0.25 \
 train.ppo.priv_info=True \
 train.ppo.output_name=AllegroHandHora/"${CACHE}" \
 checkpoint="${C}"
+# task.env.object.type=cylinder_default \

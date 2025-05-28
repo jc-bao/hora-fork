@@ -24,7 +24,7 @@
     <geom name="floor" pos="0 0 -0.1" size="0 0 0.05" type="plane" material="groundplane"/>
     <body name="object" pos="0 0 0.2">
       <freejoint/>
-      <geom type="sphere" size="0.03" rgba="0.5 0.7 0.5 1" friction="0.7 0.002 0.002" density="186" material="groundplane"/>
+      <geom type="sphere" size="0.032" rgba="0.5 0.7 0.5 1" friction="0.7 0.002 0.002" density="186" material="groundplane"/>
       <!-- <geom type="sphere" size="0.03" rgba="0.5 0.7 0.5 1" condim="6" priority="1" friction="0.7 0.002 0.002" density="186" material="groundplane"/> -->
     </body>
   </worldbody>

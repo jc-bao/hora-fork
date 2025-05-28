@@ -6,7 +6,7 @@
   <default>
     <default class="allegro_right">
       <joint axis="0 1 0" damping=".1" />
-      <position kp="3.0" />
+      <position kp="1.0"/>
       <geom density="800" />
 
       <default class="visual">
@@ -65,7 +65,7 @@
         </default>
         <default class="fingertip_collision">
           <!-- <geom type="capsule" size="0.012 0.01" pos="0 0 0.019" /> -->
-          <geom type="sphere" size="0.01235" pos="0 0 0.0515" rgba="0.9 0.9 0.9 1" />
+          <geom type="sphere" size="0.01235" pos="0 0 0.0515" rgba="0.9 0.9 0.9 1" /> 
           <default class="thumbtip_collision">
             <!-- <geom type="capsule" size="0.012 0.008" pos="0 0 0.035" /> -->
             <geom type="sphere" size="0.01235" pos="0 0 0.0671" rgba="0.9 0.9 0.9 1" />
