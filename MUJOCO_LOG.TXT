@@ -13,3 +13,51 @@ WARNING: Nan, Inf or huge value in QVEL at DOF 0. The simulation is unstable. Ti
 Sun May 25 13:45:28 2025
 WARNING: Nan, Inf or huge value in QACC at DOF 19. The simulation is unstable. Time = 0.4750.
 
+Wed May 28 10:32:24 2025
+WARNING: OpenGL error 0x502 in or before mjr_makeContext
+
+Fri May 30 09:46:25 2025
+WARNING: Nan, Inf or huge value in QVEL at DOF 2. The simulation is unstable. Time = 3.8667.
+
+Fri May 30 09:46:25 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 0.0083.
+
+Fri May 30 09:46:25 2025
+WARNING: Nan, Inf or huge value in QVEL at DOF 0. The simulation is unstable. Time = 0.0583.
+
+Fri May 30 09:46:25 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 0.0083.
+
+Fri May 30 09:46:26 2025
+WARNING: Nan, Inf or huge value in QVEL at DOF 9. The simulation is unstable. Time = 0.0583.
+
+Fri May 30 09:46:26 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 0.0083.
+
+Fri May 30 09:46:27 2025
+WARNING: Nan, Inf or huge value in QVEL at DOF 1. The simulation is unstable. Time = 0.0583.
+
+Fri May 30 09:51:07 2025
+WARNING: Nan, Inf or huge value in QVEL at DOF 1. The simulation is unstable. Time = 7.2666.
+
+Fri May 30 09:51:07 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 0.0083.
+
+Fri May 30 09:51:07 2025
+WARNING: Nan, Inf or huge value in QVEL at DOF 0. The simulation is unstable. Time = 0.0583.
+
+Fri May 30 09:51:07 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 0.0083.
+
+Fri May 30 09:51:08 2025
+WARNING: Nan, Inf or huge value in QVEL at DOF 0. The simulation is unstable. Time = 0.0583.
+
+Fri May 30 09:51:08 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 0.0083.
+
+Fri May 30 09:51:09 2025
+WARNING: Nan, Inf or huge value in QVEL at DOF 4. The simulation is unstable. Time = 0.0583.
+
+Fri May 30 09:51:09 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 0.0083.
+

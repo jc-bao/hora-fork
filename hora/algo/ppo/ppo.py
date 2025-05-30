@@ -233,7 +233,7 @@ class PPO(object):
         enable_log = True
         # Chaoyi: add mujoco env
         mj_model = mujoco.MjModel.from_xml_path('assets/allegro/scene_right.xml')
-        mj_model.opt.timestep = self.env.dt
+        # mj_model.opt.timestep = self.env.dt
         mj_data = mujoco.MjData(mj_model)
 
         self.set_eval()
@@ -297,17 +297,17 @@ class PPO(object):
                 ctrl = self.env.cur_targets[0].cpu().numpy()
                 # ctrl = hand_qpos
                 
-                for i in range(self.env.control_freq_inv):
+                for i in range(int(self.env.dt / mj_model.opt.timestep) * self.env.control_freq_inv):
                     mj_data.ctrl = ctrl
                     # mj_data.qpos[:-7] = hand_qpos
                     # mj_data.qvel[:-6] = hand_qvel
                     # mj_data.qpos[-7:] = object_qpos
                     # mj_data.qvel[-6:] = object_qvel
-                    # if step_cnt % 10 == 0:
-                    # mj_data.qpos[:-7] = hand_qpos
-                    # mj_data.qvel[:-6] = hand_qvel
-                    # mj_data.qpos[-7:] = object_qpos
-                    # mj_data.qvel[-6:] = object_qvel
+                    if step_cnt % 100 == 0:
+                        mj_data.qpos[:-7] = hand_qpos
+                        mj_data.qvel[:-6] = hand_qvel
+                        mj_data.qpos[-7:] = object_qpos
+                        mj_data.qvel[-6:] = object_qvel
                     mujoco.mj_step(mj_model, mj_data)
                 viewer.sync()
                 
